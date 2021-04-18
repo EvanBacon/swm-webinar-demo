@@ -5,7 +5,7 @@ import styled from "styled-components/native";
 import { useLayout } from "../hooks/useLayout";
 import { Product } from "../utils/API";
 import { ProductGrid } from "./ProductGrid";
-import { View } from "./Themed";
+import { Text, View } from "./Themed";
 
 const ProductImage = styled.Image`
   border-radius: 8px;
@@ -13,7 +13,7 @@ const ProductImage = styled.Image`
   border-width: 0.5px;
   aspect-ratio: 1;
 `;
-const ProductTitle = styled.Text`
+const ProductTitle = styled(Text)`
   font-size: 16px;
   font-weight: bold;
 `;
@@ -35,7 +35,7 @@ function ProductItem({ item }: { item: Product }) {
                 />
                 <View style={{ padding: 8 }}>
                     <ProductTitle>{item.title}</ProductTitle>
-                    <ProductSubtitle>${item.price}</ProductSubtitle>
+                    <Text style={{ fontSize: 14, paddingTop: 4 }} lightColor={'#65676b'} darkColor={'white'}>${item.price}</Text>
                 </View>
             </Link>
         </View>

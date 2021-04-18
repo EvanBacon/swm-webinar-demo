@@ -4,16 +4,15 @@ import {
     ActivityIndicator,
     Image,
     StyleSheet,
-    Text,
     TouchableOpacity,
     useWindowDimensions,
-    View,
 } from "react-native";
 
 import Colors from "../constants/Colors";
 import { ProductsParamList } from "../types";
 import { useProduct } from "../utils/API";
 import { BlurView } from "expo-blur";
+import { Text, View } from "../components/Themed";
 
 type ViewProps = React.ComponentProps<typeof View>;
 
@@ -76,8 +75,9 @@ export default function DetailScreen({
             >
                 <View style={{ flex: 1, padding: 16 }}>
                     <Text
+                        lightColor={Colors.light.text}
+                        darkColor={Colors.dark.text}
                         style={{
-                            color: Colors.light.text,
                             fontSize: 20,
                             fontWeight: "bold",
                         }}
@@ -85,8 +85,9 @@ export default function DetailScreen({
                         {product.title}
                     </Text>
                     <Text
+                        lightColor={Colors.light.text}
+                        darkColor={Colors.dark.text}
                         style={{
-                            color: Colors.light.text,
                             fontSize: 20,
                             opacity: 0.6,
                             paddingTop: 4,
@@ -95,7 +96,9 @@ export default function DetailScreen({
                         ${product.price}
                     </Text>
                     <Text
-                        style={{ color: Colors.light.text, fontSize: 14, paddingTop: 4 }}
+                        lightColor={Colors.light.text}
+                        darkColor={Colors.dark.text}
+                        style={{ fontSize: 14, paddingTop: 4 }}
                     >
                         {product.description}
                     </Text>
@@ -125,8 +128,9 @@ function Tags({ tagString }: { tagString?: string }) {
     return (
         <View style={{ paddingVertical: 16 }}>
             <Text
+                lightColor={Colors.light.text}
+                darkColor={Colors.dark.text}
                 style={{
-                    color: Colors.light.text,
                     fontSize: 20,
                     fontWeight: "bold",
                     paddingBottom: 12,
@@ -148,8 +152,9 @@ function Tags({ tagString }: { tagString?: string }) {
 function Tag({ children, padNext }: { children: string; padNext: boolean }) {
     return (
         <View
+            lightColor={"#e4e6eb"}
+            darkColor={Colors.light.tint}
             style={{
-                backgroundColor: "#e4e6eb",
                 paddingHorizontal: 18,
                 paddingVertical: 8,
                 justifyContent: "center",
@@ -158,7 +163,11 @@ function Tag({ children, padNext }: { children: string; padNext: boolean }) {
                 marginLeft: padNext ? 8 : 0,
             }}
         >
-            <Text style={{ fontWeight: "bold", textAlign: "center" }}>
+            <Text
+                lightColor={Colors.light.text}
+                darkColor={Colors.dark.text}
+                style={{ fontWeight: "bold", textAlign: "center" }}
+            >
                 {children}
             </Text>
         </View>
