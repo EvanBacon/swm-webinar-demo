@@ -1,6 +1,6 @@
 import { useNavigation } from '@react-navigation/native';
 import * as React from 'react';
-import { FlatList, Image, LayoutRectangle, StyleSheet, TouchableOpacity, useWindowDimensions } from 'react-native';
+import { FlatList, Image, LayoutRectangle, Platform, StyleSheet, TouchableOpacity, useWindowDimensions } from 'react-native';
 import { AspectView } from '../components/AspectView';
 
 import { Text, View } from '../components/Themed';
@@ -71,7 +71,7 @@ export default function TabOneScreen() {
         data={value}
         keyExtractor={extractKey}
         renderItem={renderItem}
-        numColumns={dims.width > 640 ? dims.width > 960 ? 4 : 3 : 2}
+        numColumns={Platform.OS === 'web' ? 3 : 2}
         columnWrapperStyle={{ minWidth: "100%", maxWidth: "100%" }}
         style={{ flex: 1 }}
         ListHeaderComponent={renderHeader}
