@@ -4,27 +4,29 @@
  * https://reactnavigation.org/docs/configuring-links
  */
 
-import * as Linking from 'expo-linking';
+import * as Linking from "expo-linking";
 
 export default {
-  prefixes: [Linking.makeUrl('/')],
+  prefixes: [Linking.makeUrl("/")],
   config: {
     screens: {
+      Auth: "auth",
       Root: {
         screens: {
-          TabOne: {
+          ProductsTab: {
             screens: {
-              TabOneScreen: 'one',
+              ProductList: "product-list",
+              ProductDetails: "product-details",
             },
           },
-          TabTwo: {
+          ProfileTab: {
             screens: {
-              TabTwoScreen: 'two',
+              Profile: "profile",
             },
           },
         },
       },
-      NotFound: '*',
+      NotFound: "*",
     },
   },
 };

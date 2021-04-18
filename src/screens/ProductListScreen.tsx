@@ -1,14 +1,20 @@
+import { useNavigation } from '@react-navigation/native';
 import * as React from 'react';
-import { FlatList, TouchableOpacity, Image, StyleSheet } from 'react-native';
+import { FlatList, Image, StyleSheet, TouchableOpacity } from 'react-native';
 
 import { Text, View } from '../components/Themed';
 import { Product, useAPI } from '../utils/API';
 
 function ProductItem({ item }: { item: Product }) {
-  return (
-    <TouchableOpacity onPress={() => {
+  const navigation = useNavigation();
 
-    }} activeOpacity={0.7}>
+  return (
+    <TouchableOpacity
+      onPress={() => {
+        navigation.navigate("ProductDetails", { item });
+      }}
+      activeOpacity={0.7}
+    >
       <View
         style={{
           borderRadius: 8,
@@ -18,7 +24,9 @@ function ProductItem({ item }: { item: Product }) {
       >
         <Image source={{ uri: item.image }} style={{ aspectRatio: 1 }} />
         <View style={{ padding: 8 }}>
-          <Text style={{ fontSize: 16, fontWeight: "bold" }}>{item.title}</Text>
+          <Text style={{ fontSize: 16, fontWeight: "bold" }}>
+            {item.title}
+          </Text>
           <Text
             style={{
               fontSize: 16,
@@ -37,7 +45,6 @@ function ProductItem({ item }: { item: Product }) {
 
 export default function TabOneScreen() {
   const { value } = useAPI();
-
   const extractKey = React.useCallback((item: Product) => String(item.id), []);
 
   const renderItem = ({ item, index }: { item: Product; index: number }) => {
@@ -59,7 +66,7 @@ export default function TabOneScreen() {
         keyExtractor={extractKey}
         renderItem={renderItem}
         numColumns={2}
-        columnWrapperStyle={{ minWidth: '100%', maxWidth: '100%' }}
+        columnWrapperStyle={{ minWidth: "100%", maxWidth: "100%" }}
         style={{ flex: 1 }}
         ListHeaderComponent={renderHeader}
       />

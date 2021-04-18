@@ -46,7 +46,6 @@ function AuthNavigator() {
     );
   }
 
-
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       {!authState.value && <Stack.Screen name="Auth" component={renderAuthScreen} />}
