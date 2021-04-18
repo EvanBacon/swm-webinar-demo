@@ -1,22 +1,7 @@
 import * as AuthSession from 'expo-auth-session';
 import * as Google from 'expo-auth-session/providers/google';
 import * as React from 'react';
-import { Button, Text, View } from 'react-native';
-
-import { useSecureAuthState } from '../utils/useSecureAuthState';
-
-function LogoutButton({
-    setAuth,
-}: {
-    setAuth: (key: AuthSession.TokenResponse | null) => void;
-}) {
-    return (
-        <Button
-            title="Log out"
-            onPress={React.useCallback(() => setAuth(null), [setAuth])}
-        />
-    );
-}
+import { Button, View } from 'react-native';
 
 export default function Login({
     setAuth,
@@ -24,21 +9,18 @@ export default function Login({
     setAuth: (key: AuthSession.TokenResponse | null) => void;
 }) {
     const [request, response, promptAsync] = Google.useAuthRequest({
-        iosClientId:
-            "629683148649-jgilndep5gcjorm03pf9cnibor85khbd",
-        clientId:
-            "XXX",
-        language: 'en'
+        expoClientId: '834489759004-29segmepkrv7a5e9baj0s60g1j0cc08t.apps.googleusercontent.com',
+        // iosClientId: 'GOOGLE_GUID.apps.googleusercontent.com',
+        // androidClientId: 'GOOGLE_GUID.apps.googleusercontent.com',
+        webClientId: '834489759004-29segmepkrv7a5e9baj0s60g1j0cc08t.apps.googleusercontent.com',
     });
 
     React.useEffect(() => {
-        console.log("AUTH.changed: ", response?.type);
         if (response?.type === "success") {
             const { authentication } = response;
             if (authentication) {
                 setAuth(authentication);
             }
-            console.log("AUTH: ", authentication);
         }
     }, [response]);
 
