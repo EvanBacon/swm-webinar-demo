@@ -48,7 +48,7 @@ export default function BottomTabNavigator() {
 
 // You can explore the built-in icon families and icons on the web at:
 // https://icons.expo.fyi/
-function TabBarIcon(props: {
+export function TabBarIcon(props: {
   name: React.ComponentProps<typeof Ionicons>["name"];
   color: string;
 }) {
@@ -59,7 +59,7 @@ function TabBarIcon(props: {
 // https://reactnavigation.org/docs/tab-based-navigation#a-stack-navigator-for-each-tab
 const ProductsStack = createStackNavigator<ProductsParamList>();
 
-function ProductsNavigator() {
+export function ProductsNavigator() {
   return (
     <ProductsStack.Navigator>
       <ProductsStack.Screen
@@ -80,7 +80,7 @@ function ProductsNavigator() {
 
 const ProfileStack = createStackNavigator<ProfileParamList>();
 
-function ProfileNavigator() {
+export function ProfileNavigator() {
   return (
     <ProfileStack.Navigator>
       <ProfileStack.Screen

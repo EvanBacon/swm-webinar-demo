@@ -1,9 +1,11 @@
 import { useNavigation } from '@react-navigation/native';
 import * as React from 'react';
-import { FlatList, Image, StyleSheet, TouchableOpacity } from 'react-native';
+import { FlatList, Image, LayoutRectangle, StyleSheet, TouchableOpacity, useWindowDimensions } from 'react-native';
+import { AspectView } from '../components/AspectView';
 
 import { Text, View } from '../components/Themed';
 import { Product, useAPI } from '../utils/API';
+
 
 function ProductItem({ item }: { item: Product }) {
   const navigation = useNavigation();
@@ -22,7 +24,9 @@ function ProductItem({ item }: { item: Product }) {
           overflow: "hidden",
         }}
       >
-        <Image source={{ uri: item.image }} style={{ aspectRatio: 1 }} />
+        <AspectView style={{ aspectRatio: 1 }}>
+          <Image source={{ uri: item.image }} style={{ flex: 1, }} />
+        </AspectView>
         <View style={{ padding: 8 }}>
           <Text style={{ fontSize: 16, fontWeight: "bold" }}>
             {item.title}
@@ -35,7 +39,7 @@ function ProductItem({ item }: { item: Product }) {
               fontWeight: "bold",
             }}
           >
-            {item.price}
+            ${item.price}
           </Text>
         </View>
       </View>
@@ -59,13 +63,15 @@ export default function TabOneScreen() {
     return <View />;
   };
 
+  const dims = useWindowDimensions()
+
   return (
     <View style={styles.container}>
       <FlatList
         data={value}
         keyExtractor={extractKey}
         renderItem={renderItem}
-        numColumns={2}
+        numColumns={dims.width > 640 ? dims.width > 960 ? 4 : 3 : 2}
         columnWrapperStyle={{ minWidth: "100%", maxWidth: "100%" }}
         style={{ flex: 1 }}
         ListHeaderComponent={renderHeader}

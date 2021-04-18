@@ -13,7 +13,8 @@ import AuthScreen from '../screens/AuthScreen';
 import NotFoundScreen from '../screens/NotFoundScreen';
 import { RootStackParamList } from '../types';
 import { useSecureAuthState } from '../utils/useSecureAuthState';
-import BottomTabNavigator from './BottomTabNavigator';
+// import BottomTabNavigator from './BottomTabNavigator';
+import MainTabNavigator from './MainTabNavigator';
 import LinkingConfiguration from './LinkingConfiguration';
 
 export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeName }) {
@@ -49,7 +50,7 @@ function AuthNavigator() {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       {!authState.value && <Stack.Screen name="Auth" component={renderAuthScreen} />}
-      {authState.value && <Stack.Screen name="Root" component={BottomTabNavigator} />}
+      {authState.value && <Stack.Screen name="Root" component={MainTabNavigator} />}
       <Stack.Screen name="NotFound" component={NotFoundScreen} options={{ title: 'Oops!' }} />
     </Stack.Navigator>
   );
