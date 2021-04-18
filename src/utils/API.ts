@@ -199,6 +199,32 @@ const FAKE: Product[] = [
   },
 ];
 
+export function useProduct(
+  id: number
+): { value: Product | null; error: Error | null } {
+  // if (__DEV__) {
+  return { value: FAKE.find((item) => item.id === id) ?? null, error: null };
+  // }
+
+  // const [state, setState] = useSafeState<Product[]>();
+  // const isMounted = useMounted();
+
+  // React.useEffect(() => {
+  //   const limit = 30;
+  //   fetch(`https://fakestoreapi.com/products?limit=${limit}`)
+  //     .then((data) => data.json())
+  //     .then((value) => {
+  //       console.log(JSON.stringify(value));
+  //       if (isMounted.current) setState({ value });
+  //     })
+  //     .catch((error) => {
+  //       if (isMounted.current) setState({ error });
+  //     });
+  // }, []);
+
+  // return state;
+}
+
 export function useAPI(): { value: Product[] | null; error: Error | null } {
   if (__DEV__) {
     return { value: FAKE, error: null };

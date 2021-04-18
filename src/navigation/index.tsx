@@ -13,7 +13,6 @@ import AuthScreen from '../screens/AuthScreen';
 import NotFoundScreen from '../screens/NotFoundScreen';
 import { RootStackParamList } from '../types';
 import { useSecureAuthState } from '../utils/useSecureAuthState';
-// import BottomTabNavigator from './BottomTabNavigator';
 import MainTabNavigator from './MainTabNavigator';
 import LinkingConfiguration from './LinkingConfiguration';
 

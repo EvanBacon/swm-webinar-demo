@@ -5,12 +5,15 @@
     "ios": "expo start --ios",
     "web": "expo start --web",
     "eject": "expo eject",
-    "test": "jest --watchAll"
+    "test": "jest --watchAll",
+    "predeploy": "expo build:web",
+    "deploy": "netlify deploy --dir web-build --prod"
   },
   "jest": {
     "preset": "jest-expo"
   },
   "dependencies": {
+    "@expo/html-elements": "^0.0.2",
     "@expo/vector-icons": "^12.0.0",
     "@react-native-async-storage/async-storage": "^1.13.0",
     "@react-native-community/masked-view": "0.1.10",
@@ -22,6 +25,7 @@
     "expo-application": "~3.1.2",
     "expo-asset": "~8.3.1",
     "expo-auth-session": "~3.2.3",
+    "expo-blur": "^9.0.3",
     "expo-constants": "~10.1.3",
     "expo-crypto": "~9.1.0",
     "expo-font": "~9.1.0",
@@ -39,12 +43,14 @@
     "react-native-reanimated": "~2.1.0",
     "react-native-safe-area-context": "3.2.0",
     "react-native-screens": "~3.0.0",
-    "react-native-web": "~0.13.12"
+    "react-native-web": "~0.13.12",
+    "styled-components": "^5.2.3"
   },
   "devDependencies": {
     "@babel/core": "^7.9.0",
     "@types/react": "~16.9.35",
     "@types/react-native": "~0.63.2",
+    "@types/styled-components": "^5.1.9",
     "jest-expo": "~41.0.0",
     "typescript": "~4.0.0"
   },

@@ -1,69 +1,195 @@
 import { StackScreenProps } from "@react-navigation/stack";
 import * as React from "react";
-import { Image, StyleSheet, Text, View } from "react-native";
+import {
+    ActivityIndicator,
+    Image,
+    StyleSheet,
+    Text,
+    TouchableOpacity,
+    useWindowDimensions,
+    View,
+} from "react-native";
 
 import Colors from "../constants/Colors";
 import { ProductsParamList } from "../types";
+import { useProduct } from "../utils/API";
+import { BlurView } from "expo-blur";
+
+type ViewProps = React.ComponentProps<typeof View>;
+
+function BlurryBackdrop({
+    uri,
+    style,
+    children,
+}: {
+    uri: string;
+    style?: ViewProps["style"];
+    children?: any;
+}) {
+    return (
+        <View style={style}>
+            <Image style={StyleSheet.absoluteFill} source={{ uri }} />
+            <BlurView style={StyleSheet.absoluteFill} intensity={95} />
+            {children}
+        </View>
+    );
+}
 
 export default function DetailScreen({
     navigation,
     route,
 }: StackScreenProps<ProductsParamList, "ProductDetails">) {
+    const { value: product, error } = useProduct(route.params.id);
 
-    console.log("props:", route.params.item);
-    const product = route.params.item;
+    if (error) {
+        return (
+            <View>
+                <Text>
+                    Error getting product for ID: {route.params.id}: {error.message}
+                </Text>
+            </View>
+        );
+    }
+    if (!product) {
+        return <ActivityIndicator />;
+    }
+
+    const dims = useWindowDimensions();
+
+    const flexDirection = dims.width > 900 ? "row" : "column";
+
     return (
-        <View style={styles.detailContainer}>
+        <View style={[styles.detailContainer, { flexDirection }]}>
+            <BlurryBackdrop uri={product.image} style={{ flex: 1 }}>
+                <Image
+                    source={{ uri: product.image }}
+                    style={{ resizeMode: "contain", ...StyleSheet.absoluteFillObject }}
+                />
+            </BlurryBackdrop>
+
             <View
                 style={{
                     flex: 1,
-                    justifyContent: "center",
-                    alignItems: "center",
+
+                    flexDirection: "column",
                 }}
             >
-                <Image
-                    style={{ width: "100%", maxWidth: "100%", aspectRatio: 1 }}
-                    resizeMode="cover"
-                    source={{ uri: product.image }}
-                />
-                <Text
-                    style={{ color: Colors.light.text, fontSize: 20, fontWeight: "bold" }}
+                <View style={{ flex: 1, padding: 16 }}>
+                    <Text
+                        style={{
+                            color: Colors.light.text,
+                            fontSize: 20,
+                            fontWeight: "bold",
+                        }}
+                    >
+                        {product.title}
+                    </Text>
+                    <Text
+                        style={{
+                            color: Colors.light.text,
+                            fontSize: 20,
+                            opacity: 0.6,
+                            paddingTop: 4,
+                        }}
+                    >
+                        ${product.price}
+                    </Text>
+                    <Text
+                        style={{ color: Colors.light.text, fontSize: 14, paddingTop: 4 }}
+                    >
+                        {product.description}
+                    </Text>
+
+                    <Tags tagString={product.category} />
+                </View>
+
+                <View
+                    style={{
+                        padding: 12,
+                        borderTopColor: "rgba(0,0,0,0.2)",
+                        borderTopWidth: StyleSheet.hairlineWidth,
+                    }}
                 >
-                    {product.title}
-                </Text>
-                <Text style={{ color: Colors.light.text, fontSize: 20, opacity: 0.6 }}>
-                    ${product.price}
-                </Text>
+                    <BuyButton />
+                </View>
             </View>
-            <View style={{ padding: 12 }}>
-                <BuyButton />
+        </View>
+    );
+}
+
+function Tags({ tagString }: { tagString?: string }) {
+    const tags = React.useMemo(() => (tagString ? tagString.split(" ") : []), [
+        tagString,
+    ]);
+
+    return (
+        <View style={{ paddingVertical: 16 }}>
+            <Text
+                style={{
+                    color: Colors.light.text,
+                    fontSize: 20,
+                    fontWeight: "bold",
+                    paddingBottom: 12,
+                }}
+            >
+                Tags
+      </Text>
+            <View style={{ flexDirection: "row" }}>
+                {tags.map((tag, index) => (
+                    <Tag key={String(index)} padNext={index !== 0}>
+                        {tag}
+                    </Tag>
+                ))}
             </View>
+        </View>
+    );
+}
+
+function Tag({ children, padNext }: { children: string; padNext: boolean }) {
+    return (
+        <View
+            style={{
+                backgroundColor: "#e4e6eb",
+                paddingHorizontal: 18,
+                paddingVertical: 8,
+                justifyContent: "center",
+                alignItems: "center",
+                borderRadius: 20,
+                marginLeft: padNext ? 8 : 0,
+            }}
+        >
+            <Text style={{ fontWeight: "bold", textAlign: "center" }}>
+                {children}
+            </Text>
         </View>
     );
 }
 
 function BuyButton() {
     return (
-        <View
-            style={{
-                justifyContent: "center",
-                backgroundColor: Colors.light.tint,
-                alignItems: "center",
-                borderRadius: 8,
-            }}
-        >
-            <Text
+        <TouchableOpacity onPress={() => { }}>
+            <View
+                cursor="not-allow"
                 style={{
-                    fontWeight: "bold",
-                    color: Colors.light.background,
-                    textAlign: "center",
-                    paddingVertical: 18,
-                    fontSize: 16,
+                    justifyContent: "center",
+                    backgroundColor: Colors.light.tint,
+                    alignItems: "center",
+                    borderRadius: 8,
                 }}
             >
-                Add to Cart
-      </Text>
-        </View>
+                <Text
+                    style={{
+                        fontWeight: "bold",
+                        color: Colors.light.background,
+                        textAlign: "center",
+                        paddingVertical: 18,
+                        fontSize: 16,
+                    }}
+                >
+                    Add to Cart
+        </Text>
+            </View>
+        </TouchableOpacity>
     );
 }
 
@@ -93,6 +219,7 @@ const styles = StyleSheet.create({
     },
     detailContainer: {
         flex: 1,
+        flexDirection: "row",
     },
     detailImage: {
         width: "100%",

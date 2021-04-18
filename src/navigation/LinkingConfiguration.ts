@@ -7,7 +7,7 @@
 import * as Linking from "expo-linking";
 
 export default {
-  prefixes: [Linking.makeUrl("/")],
+  prefixes: [Linking.createURL("/")],
   config: {
     screens: {
       Auth: "auth",
@@ -16,7 +16,12 @@ export default {
           ProductsTab: {
             screens: {
               ProductList: "product-list",
-              ProductDetails: "product-details",
+              ProductDetails: {
+                path: "item/:id",
+                parse: {
+                  id: Number,
+                },
+              },
             },
           },
           ProfileTab: {

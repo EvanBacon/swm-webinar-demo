@@ -9,10 +9,9 @@ export default function Login({
     setAuth: (key: AuthSession.TokenResponse | null) => void;
 }) {
     const [request, response, promptAsync] = Google.useAuthRequest({
-        expoClientId: '834489759004-29segmepkrv7a5e9baj0s60g1j0cc08t.apps.googleusercontent.com',
+        clientId: '834489759004-29segmepkrv7a5e9baj0s60g1j0cc08t.apps.googleusercontent.com',
         // iosClientId: 'GOOGLE_GUID.apps.googleusercontent.com',
         // androidClientId: 'GOOGLE_GUID.apps.googleusercontent.com',
-        webClientId: '834489759004-29segmepkrv7a5e9baj0s60g1j0cc08t.apps.googleusercontent.com',
     });
 
     React.useEffect(() => {

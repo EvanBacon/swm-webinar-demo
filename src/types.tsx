@@ -18,7 +18,7 @@ export type BottomTabParamList = {
 
 export type ProductsParamList = {
   ProductList: undefined;
-  ProductDetails: { item: Product };
+  ProductDetails: { id: number };
 };
 
 export type ProfileParamList = {
