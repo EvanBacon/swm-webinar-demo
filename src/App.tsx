@@ -1,10 +1,13 @@
 import { StatusBar } from 'expo-status-bar';
+import * as WebBrowser from 'expo-web-browser';
 import React from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import useCachedResources from './hooks/useCachedResources';
 import useColorScheme from './hooks/useColorScheme';
 import Navigation from './navigation';
+
+WebBrowser.maybeCompleteAuthSession();
 
 export default function App() {
   const isLoadingComplete = useCachedResources();

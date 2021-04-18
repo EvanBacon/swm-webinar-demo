@@ -6,10 +6,13 @@
 import { NavigationContainer, DefaultTheme, DarkTheme } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import * as React from 'react';
-import { ColorSchemeName } from 'react-native';
+import { View, Text, ColorSchemeName } from 'react-native';
+
+import AuthScreen from '../screens/AuthScreen';
 
 import NotFoundScreen from '../screens/NotFoundScreen';
 import { RootStackParamList } from '../types';
+import { useSecureAuthState } from '../utils/useSecureAuthState';
 import BottomTabNavigator from './BottomTabNavigator';
 import LinkingConfiguration from './LinkingConfiguration';
 
@@ -18,7 +21,7 @@ export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeNa
     <NavigationContainer
       linking={LinkingConfiguration}
       theme={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <RootNavigator />
+      <AuthNavigator />
     </NavigationContainer>
   );
 }
@@ -27,10 +30,27 @@ export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeNa
 // Read more here: https://reactnavigation.org/docs/modal
 const Stack = createStackNavigator<RootStackParamList>();
 
-function RootNavigator() {
+function AuthNavigator() {
+
+  const [authState, setAuthState] = useSecureAuthState("auth.shopify");
+
+  const renderAuthScreen = React.useCallback(() => {
+    return (<AuthScreen setAuth={setAuthState} />)
+  }, [setAuthState])
+
+  if (authState.error) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center" }}>
+        <Text>Error getting cached auth: {authState.error.message}</Text>
+      </View>
+    );
+  }
+
+
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="Root" component={BottomTabNavigator} />
+      {!authState.value && <Stack.Screen name="Auth" component={renderAuthScreen} />}
+      {authState.value && <Stack.Screen name="Root" component={BottomTabNavigator} />}
       <Stack.Screen name="NotFound" component={NotFoundScreen} options={{ title: 'Oops!' }} />
     </Stack.Navigator>
   );
