@@ -1,6 +1,8 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as AuthSession from "expo-auth-session";
 import * as SecureStore from "expo-secure-store";
 import * as React from "react";
+import { Platform } from "react-native";
 
 import { useMounted, useSafeState, UseStateHook } from "./utils";
 
@@ -9,12 +11,25 @@ async function setSecureItemAsync(
   value: string | null
 ): Promise<string | null> {
   if (value == null) {
-    await SecureStore.deleteItemAsync(key);
+    if (Platform.OS === "web") {
+      await AsyncStorage.removeItem(key);
+    } else {
+      await SecureStore.deleteItemAsync(key);
+    }
   } else {
-    await SecureStore.setItemAsync(key, value);
+    if (Platform.OS === "web") {
+      await AsyncStorage.setItem(key, value);
+    } else {
+      await SecureStore.setItemAsync(key, value);
+    }
   }
   return value;
 }
+
+const getItemAsync = Platform.select<(key: string) => Promise<string | null>>({
+  default: SecureStore.getItemAsync,
+  web: AsyncStorage.getItem,
+});
 
 function useSecureState(key: string): UseStateHook<string> {
   // Public
@@ -25,7 +40,7 @@ function useSecureState(key: string): UseStateHook<string> {
 
   // Get
   React.useEffect(() => {
-    SecureStore.getItemAsync(key)
+    getItemAsync(key)
       .then((value) => {
         if (isMounted.current) setState({ value });
       })
