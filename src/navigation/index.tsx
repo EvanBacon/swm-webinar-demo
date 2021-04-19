@@ -32,7 +32,7 @@ const Stack = createStackNavigator<RootStackParamList>();
 
 function AuthNavigator() {
 
-  const [authState, setAuthState] = useSecureAuthState("auth.shopify");
+  const [authState, setAuthState] = useSecureAuthState("auth.google");
 
   const renderAuthScreen = React.useCallback(() => {
     return (<AuthScreen setAuth={setAuthState} />)

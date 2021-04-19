@@ -1,9 +1,26 @@
 import * as AuthSession from 'expo-auth-session';
 import * as Google from 'expo-auth-session/providers/google';
 import * as React from 'react';
-import { Button, View } from 'react-native';
+import { Button, TouchableOpacity, } from 'react-native';
+import GoogleSignInButton from '../components/GoogleButton';
+import { Text, View } from '../components/Themed';
 
 export default function Login({
+    setAuth,
+}: {
+    setAuth: (key: AuthSession.TokenResponse | null) => void;
+}) {
+
+    return (
+        <View style={{ flex: 1, padding: 36, justifyContent: "space-around", alignItems: 'center' }}>
+            <Text style={{ textAlign: 'center', fontSize: 36, fontWeight: 'bold' }}>Market App</Text>
+            <LoginButton
+                setAuth={setAuth}
+            />
+        </View>
+    );
+}
+function LoginButton({
     setAuth,
 }: {
     setAuth: (key: AuthSession.TokenResponse | null) => void;
@@ -24,14 +41,9 @@ export default function Login({
     }, [response]);
 
     return (
-        <View style={{ flex: 1, justifyContent: "center" }}>
-            <Button
-                disabled={!request}
-                title="Login"
-                onPress={() => {
-                    promptAsync();
-                }}
-            />
-        </View>
+        <GoogleSignInButton disabled={!request} onPress={() => {
+            promptAsync()
+        }}>Sign-In with Google</GoogleSignInButton>
+
     );
 }
