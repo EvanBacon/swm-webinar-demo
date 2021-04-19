@@ -4,8 +4,9 @@ import {
     DrawerContentComponentProps,
     DrawerContentOptions,
     DrawerContentScrollView,
-    DrawerItemList,
+    // DrawerItemList,
 } from "@react-navigation/drawer";
+import DrawerItemList from './DrawerItemList';
 import * as React from "react";
 import {
     Platform,
@@ -47,6 +48,8 @@ function CustomDrawerContent({
     );
 }
 
+
+
 function BrandLogo({ isSmall }: { isSmall: boolean }) {
     return (
         <View
@@ -58,9 +61,7 @@ function BrandLogo({ isSmall }: { isSmall: boolean }) {
                 padding: 8,
             }}
         >
-            <Text style={{ fontSize: isSmall ? 12 : 16, fontWeight: "bold" }}>
-                Market
-      </Text>
+            <Text style={{ fontSize: isSmall ? 12 : 16, fontWeight: "bold" }}>Market</Text>
         </View>
     );
 }
