@@ -1,21 +1,19 @@
 import { StackScreenProps } from "@react-navigation/stack";
+import { BlurView } from "expo-blur";
 import * as React from "react";
 import {
     ActivityIndicator,
     Image,
-    Platform,
     StyleSheet,
     TouchableOpacity,
     useWindowDimensions,
 } from "react-native";
+import { ScrollView } from "react-native-gesture-handler";
 
+import { Text, View } from "../components/Themed";
 import Colors from "../constants/Colors";
 import { ProductsParamList } from "../types";
 import { useProduct } from "../utils/API";
-import { BlurView } from "expo-blur";
-import { Text, View } from "../components/Themed";
-import { ScrollView } from "react-native-gesture-handler";
-import { useMounted, useSafeState } from "../utils/utils";
 
 type ViewProps = React.ComponentProps<typeof View>;
 
