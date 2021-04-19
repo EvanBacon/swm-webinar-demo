@@ -1,6 +1,9 @@
 import Ionicons from '@expo/vector-icons/build/Ionicons';
 import { createStackNavigator } from '@react-navigation/stack';
 import * as React from 'react';
+import { useThemeColor } from '../components/Themed';
+import Colors from '../constants/Colors';
+import useColorScheme from '../hooks/useColorScheme';
 
 import ProductDetailsScreen from '../screens/ProductDetailsScreen';
 import ProductListScreen from '../screens/ProductListScreen';
@@ -22,8 +25,11 @@ export function TabBarIcon(props: {
 const ProductsStack = createStackNavigator<ProductsParamList>();
 
 export function ProductsNavigator() {
+  const theme = useColorScheme();
+  const headerTintColor = Colors[theme].tint;
+
   return (
-    <ProductsStack.Navigator>
+    <ProductsStack.Navigator screenOptions={{ headerTintColor }}>
       <ProductsStack.Screen
         options={{ title: "Products" }}
         name="ProductList"
@@ -43,12 +49,14 @@ export function ProductsNavigator() {
 const ProfileStack = createStackNavigator<ProfileParamList>();
 
 export function ProfileNavigator() {
+  const theme = useColorScheme();
+  const headerTintColor = Colors[theme].tint;
   return (
-    <ProfileStack.Navigator>
+    <ProfileStack.Navigator screenOptions={{ headerTintColor }}>
       <ProfileStack.Screen
         name="Profile"
         component={ProfileScreen}
-        options={{ headerTitle: "Profile" }}
+        options={{ title: "Profile" }}
       />
     </ProfileStack.Navigator>
   );

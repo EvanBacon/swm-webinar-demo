@@ -14,6 +14,7 @@ import {
     useWindowDimensions,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import useColorScheme from '../hooks/useColorScheme';
 
 import Colors from "../constants/Colors";
 import {
@@ -83,6 +84,9 @@ export default function MainTabNavigator(props: any) {
         );
     }, []);
 
+    const theme = useColorScheme();
+    const colors = Colors[theme];
+
     // Use a tab bar on all except web desktop.
     // NOTE(brentvatne): if you navigate to an example screen and then resize your
     // browser such that the navigator changes from tab to drawer or drawer to tab
@@ -95,20 +99,20 @@ export default function MainTabNavigator(props: any) {
                 // or material-bottom-tabs navigator
                 // material-bottom-tabs props
                 shifting
-                activeTintColor={Colors.light.tabIconSelected}
-                inactiveTintColor={Colors.light.tabIconDefault}
+                activeTintColor={colors.tabIconSelected}
+                inactiveTintColor={colors.tabIconDefault}
                 barStyle={{
-                    backgroundColor: Colors.light.tabBar,
+                    backgroundColor: colors.tabBar,
                     borderTopWidth: StyleSheet.hairlineWidth,
-                    borderTopColor: Colors.light.tabIconDefault,
+                    borderTopColor: colors.tabIconDefault,
                 }}
                 // bottom-tabs props
                 tabBarOptions={{
                     style: {
-                        backgroundColor: Colors.light.tabBar,
+                        backgroundColor: colors.tabBar,
                     },
-                    activeTintColor: Colors.light.tabIconSelected,
-                    inactiveTintColor: Colors.light.tabIconDefault,
+                    activeTintColor: colors.tabIconSelected,
+                    inactiveTintColor: colors.tabIconDefault,
                 }}
             >
                 {renderTabs()}

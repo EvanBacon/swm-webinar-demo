@@ -3,6 +3,7 @@ import * as React from "react";
 import {
     ActivityIndicator,
     Image,
+    Platform,
     StyleSheet,
     TouchableOpacity,
     useWindowDimensions,
@@ -13,6 +14,8 @@ import { ProductsParamList } from "../types";
 import { useProduct } from "../utils/API";
 import { BlurView } from "expo-blur";
 import { Text, View } from "../components/Themed";
+import { ScrollView } from "react-native-gesture-handler";
+import { useMounted, useSafeState } from "../utils/utils";
 
 type ViewProps = React.ComponentProps<typeof View>;
 
@@ -28,7 +31,7 @@ function BlurryBackdrop({
     return (
         <View style={style}>
             <Image style={StyleSheet.absoluteFill} source={{ uri }} />
-            <BlurView style={StyleSheet.absoluteFill} intensity={95} />
+            <BlurView style={StyleSheet.absoluteFill} intensity={99} />
             {children}
         </View>
     );
@@ -55,57 +58,64 @@ export default function DetailScreen({
 
     const dims = useWindowDimensions();
 
-    const flexDirection = dims.width > 900 ? "row" : "column";
+    const isHorizontal = dims.width > 900;
+    const flexDirection = isHorizontal ? "row" : "column";
 
+    const blurStyle = isHorizontal ? { height: "100%" } : { width: "100%" };
     return (
-        <View style={[styles.detailContainer, { flexDirection }]}>
-            <BlurryBackdrop uri={product.image} style={{ flex: 1 }}>
+        <View style={{ flex: 1, flexDirection }}>
+            <BlurryBackdrop uri={product.image} style={[blurStyle, { flex: 1 }]}>
                 <Image
                     source={{ uri: product.image }}
                     style={{ resizeMode: "contain", ...StyleSheet.absoluteFillObject }}
                 />
             </BlurryBackdrop>
-
-            <View
-                style={{
-                    flex: 1,
-
-                    flexDirection: "column",
-                }}
-            >
-                <View style={{ flex: 1, padding: 16 }}>
-                    <Text
-                        lightColor={Colors.light.text}
-                        darkColor={Colors.dark.text}
+            <View style={{ flex: 1 }}>
+                <ScrollView
+                    style={{ flex: 1 }}
+                    contentContainerStyle={!isHorizontal ? {} : { maxWidth: "100%" }}
+                >
+                    <View
                         style={{
-                            fontSize: 20,
-                            fontWeight: "bold",
+                            flex: 1,
+
+                            flexDirection: "column",
                         }}
                     >
-                        {product.title}
-                    </Text>
-                    <Text
-                        lightColor={Colors.light.text}
-                        darkColor={Colors.dark.text}
-                        style={{
-                            fontSize: 20,
-                            opacity: 0.6,
-                            paddingTop: 4,
-                        }}
-                    >
-                        ${product.price}
-                    </Text>
-                    <Text
-                        lightColor={Colors.light.text}
-                        darkColor={Colors.dark.text}
-                        style={{ fontSize: 14, paddingTop: 4 }}
-                    >
-                        {product.description}
-                    </Text>
+                        <View style={{ flex: 1, padding: 16 }}>
+                            <Text
+                                lightColor={Colors.light.text}
+                                darkColor={Colors.dark.text}
+                                style={{
+                                    fontSize: 20,
+                                    fontWeight: "bold",
+                                }}
+                            >
+                                {product.title}
+                            </Text>
+                            <Text
+                                lightColor={Colors.light.text}
+                                darkColor={Colors.dark.text}
+                                style={{
+                                    fontSize: 20,
+                                    opacity: 0.6,
+                                    paddingTop: 4,
+                                }}
+                            >
+                                ${product.price}
+                            </Text>
+                            <Text
+                                lightColor={Colors.light.text}
+                                darkColor={Colors.dark.text}
+                                style={{ fontSize: 14, paddingTop: 4 }}
+                            >
+                                {product.description}
+                            </Text>
 
-                    <Tags tagString={product.category} />
-                </View>
-
+                            <Tags tagString={product.category} />
+                        </View>
+                    </View>
+                </ScrollView>
                 <View
                     style={{
                         padding: 12,

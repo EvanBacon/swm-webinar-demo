@@ -1,4 +1,5 @@
 import * as React from "react";
+import { Image } from "react-native";
 
 export type UseStateHook<T> = [
   { value: T | null; error: Error | null },
@@ -48,4 +49,28 @@ export function useResolvedValue<T>(
 
 export function useMounted() {
   return React.useRef(true);
+}
+
+export function useImageSize(uri: string) {
+  // Public
+  const [state, setState] = useSafeState<{ width: number; height: number }>();
+
+  // Sanity
+  const isMounted = useMounted();
+
+  // Get
+  React.useEffect(() => {
+    Image.getSize(
+      uri,
+      (width, height) => {
+        if (isMounted.current)
+          setState({ value: { width, height }, error: null });
+      },
+      (error) => {
+        if (isMounted.current) setState({ value: null, error });
+      }
+    );
+  }, [uri]);
+
+  return state;
 }

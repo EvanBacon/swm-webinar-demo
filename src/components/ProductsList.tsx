@@ -1,27 +1,12 @@
 import { Link, useNavigation } from "@react-navigation/native";
 import * as React from "react";
-import styled from "styled-components/native";
+import { Image, StyleSheet, Platform } from "react-native";
 
 import { useLayout } from "../hooks/useLayout";
 import { Product } from "../utils/API";
 import { ProductGrid } from "./ProductGrid";
 import { Text, View } from "./Themed";
 
-const ProductImage = styled.Image`
-  border-radius: 8px;
-  border-color: rgba(0, 0, 0, 0.1);
-  border-width: 0.5px;
-  aspect-ratio: 1;
-`;
-const ProductTitle = styled(Text)`
-  font-size: 16px;
-  font-weight: bold;
-`;
-const ProductSubtitle = styled.Text`
-  font-size: 14px;
-  color: #65676b;
-  padding-top: 4px;
-`;
 
 function ProductItem({ item }: { item: Product }) {
     const { onLayout, ...layout } = useLayout();
@@ -29,12 +14,18 @@ function ProductItem({ item }: { item: Product }) {
     return (
         <View style={{ flex: 1 }} onLayout={onLayout}>
             <Link to={`/item/${item.id}`}>
-                <ProductImage
-                    style={{ width: layout.width, height: layout.width }}
+                <Image
+                    style={{
+                        borderRadius: 8,
+                        borderColor: 'rgba(0, 0, 0, 0.1)',
+                        borderWidth: StyleSheet.hairlineWidth,
+                        aspectRatio: 1,
+                        width: layout.width, maxWidth: layout.width, height: layout.width, maxHeight: layout.width, resizeMode: 'cover'
+                    }}
                     source={{ uri: item.image }}
                 />
                 <View style={{ padding: 8 }}>
-                    <ProductTitle>{item.title}</ProductTitle>
+                    <Text style={{ fontSize: 16, fontWeight: 'bold' }} >{item.title}</Text>
                     <Text style={{ fontSize: 14, paddingTop: 4 }} lightColor={'#65676b'} darkColor={'white'}>${item.price}</Text>
                 </View>
             </Link>
@@ -47,7 +38,7 @@ export function ProductList({ data }: { data: Product[] | null }) {
 
     const renderItem = ({ item }: { item: Product; index: number }) => {
         return (
-            <View style={{ flex: 1 }}>
+            <View style={{ flex: 1, padding: Platform.select({ default: 8, web: 0 }) }}>
                 <ProductItem item={item} />
             </View>
         );

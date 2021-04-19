@@ -25,7 +25,7 @@ export function ProductGrid({
             renderItem={renderItem}
             numColumns={2}
             columnWrapperStyle={{ minWidth: "100%", maxWidth: "100%" }}
-            style={{ flex: 1, paddingHorizontal: 32 }}
+            style={{ flex: 1, padding: 4 }}
         />
     );
 }
