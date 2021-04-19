@@ -14,11 +14,13 @@ import {
     View,
     StyleSheet,
     useWindowDimensions,
-    Text,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import useColorScheme from "../hooks/useColorScheme";
 
+import {
+    Text,
+} from '../components/Themed'
 import Colors from "../constants/Colors";
 import {
     ProductsNavigator,

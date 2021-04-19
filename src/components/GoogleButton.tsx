@@ -9,10 +9,7 @@ import {
     ViewStyle,
 } from 'react-native';
 
-const googleIcon = {
-    uri:
-        'https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/200px-Google_%22G%22_Logo.svg.png',
-};
+const googleIcon = require('../../assets/images/google.png')
 
 export default class GoogleSignInButton extends React.PureComponent<{
     disabled?: boolean;
@@ -55,6 +52,6 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'space-between',
     },
-    icon: { width: 24, aspectRatio: 1 },
+    icon: { width: 24, height: 24, aspectRatio: 1 },
     text: { color: 'gray', marginLeft: 12, fontSize: 16, fontWeight: '600' },
 });
