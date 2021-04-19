@@ -10,11 +10,13 @@ import * as React from "react";
 import {
     Platform,
     ScrollViewProps,
+    View,
     StyleSheet,
     useWindowDimensions,
+    Text,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import useColorScheme from '../hooks/useColorScheme';
+import useColorScheme from "../hooks/useColorScheme";
 
 import Colors from "../constants/Colors";
 import {
@@ -36,11 +38,30 @@ function CustomDrawerContent({
 } & DrawerContentComponentProps<DrawerContentOptions>) {
     return (
         <DrawerContentScrollView {...props}>
+            <BrandLogo isSmall={!!hideLabels} />
             <DrawerItemList
                 {...props}
                 labelStyle={hideLabels ? { display: "none" } : undefined}
             />
         </DrawerContentScrollView>
+    );
+}
+
+function BrandLogo({ isSmall }: { isSmall: boolean }) {
+    return (
+        <View
+            style={{
+                flex: 1,
+                alignItems: "center",
+                minWidth: 43,
+                height: 43,
+                padding: 8,
+            }}
+        >
+            <Text style={{ fontSize: isSmall ? 12 : 16, fontWeight: "bold" }}>
+                Market
+      </Text>
+        </View>
     );
 }
 
