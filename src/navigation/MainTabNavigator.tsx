@@ -148,7 +148,7 @@ export default function MainTabNavigator(props: any) {
             drawerContent={(props) => (
                 <CustomDrawerContent {...props} hideLabels={isTablet} />
             )}
-            drawerStyle={{ width: isLargeScreen ? undefined : 64 + left }}
+            drawerStyle={{ width: isLargeScreen ? 240 : 64 + left }}
             drawerType="permanent"
         >
             {renderTabs()}
