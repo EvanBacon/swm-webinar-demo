@@ -1,7 +1,6 @@
 import Ionicons from '@expo/vector-icons/build/Ionicons';
 import { createStackNavigator } from '@react-navigation/stack';
 import * as React from 'react';
-import { useThemeColor } from '../components/Themed';
 import Colors from '../constants/Colors';
 import useColorScheme from '../hooks/useColorScheme';
 

@@ -248,3 +248,53 @@ export function useAPI(): { value: Product[] | null; error: Error | null } {
 
   return state;
 }
+
+export type ProfileData = {
+  email: string;
+  family_name: string;
+  given_name: string;
+  id: string;
+  locale: string;
+  name: string;
+  picture: string;
+  verified_email: boolean;
+};
+
+export function useGoogleUserProfile(
+  accessToken?: string
+): { value: ProfileData | null; error: Error | null } {
+  if (__DEV__) {
+    const data = {
+      email: "baconbrix@gmail.com",
+      family_name: "Bacon",
+      given_name: "Evan",
+      id: "102174862475502383175",
+      locale: "en",
+      name: "Evan Bacon",
+      picture:
+        "https://lh3.googleusercontent.com/a-/AOh14GjYlRkC6r5gKuxYkC0M1xepxlPWDDY8QF1Kz_GSRrs=s96-c",
+      verified_email: true,
+    };
+    return { value: data, error: null };
+  }
+  const [state, setState] = useSafeState<ProfileData>();
+  const isMounted = useMounted();
+
+  React.useEffect(() => {
+    if (!accessToken) {
+      return;
+    }
+    fetch("https://www.googleapis.com/userinfo/v2/me", {
+      headers: { Authorization: `Bearer ${accessToken}` },
+    })
+      .then((data) => data.json())
+      .then((value) => {
+        if (isMounted.current) setState({ value });
+      })
+      .catch((error) => {
+        if (isMounted.current) setState({ error });
+      });
+  }, [accessToken]);
+
+  return state;
+}
