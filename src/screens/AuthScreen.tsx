@@ -4,7 +4,7 @@ import * as React from 'react';
 import { Button, TouchableOpacity, } from 'react-native';
 import GoogleSignInButton from '../components/GoogleButton';
 import { Text, View } from '../components/Themed';
-
+import * as Localization from 'expo-localization'
 export default function Login({
     setAuth,
 }: {
@@ -27,6 +27,7 @@ function LoginButton({
 }) {
     const [request, response, promptAsync] = Google.useAuthRequest({
         clientId: '834489759004-29segmepkrv7a5e9baj0s60g1j0cc08t.apps.googleusercontent.com',
+        language: Localization.locale,
         // iosClientId: 'GOOGLE_GUID.apps.googleusercontent.com',
         // androidClientId: 'GOOGLE_GUID.apps.googleusercontent.com',
     });

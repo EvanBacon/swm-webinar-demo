@@ -30,6 +30,7 @@
     "expo-crypto": "~9.1.0",
     "expo-font": "~9.1.0",
     "expo-linking": "~2.2.3",
+    "expo-localization": "^10.1.0",
     "expo-notifications": "~0.11.5",
     "expo-random": "~11.1.2",
     "expo-secure-store": "~10.1.0",
