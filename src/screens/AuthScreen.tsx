@@ -12,8 +12,8 @@ export default function Login({
 }) {
 
     return (
-        <View style={{ flex: 1, padding: 36, justifyContent: "space-around", alignItems: 'center' }}>
-            <Text style={{ textAlign: 'center', fontSize: 36, fontWeight: 'bold' }}>Market App</Text>
+        <View style={{ flex: 1, padding: 36, backgroundColor: 'white', justifyContent: "space-around", alignItems: 'center' }}>
+            <Text style={{ textAlign: 'center', fontSize: 36, fontWeight: 'bold' }}>SWM Market App</Text>
             <LoginButton
                 setAuth={setAuth}
             />
@@ -28,7 +28,7 @@ function LoginButton({
     const [request, response, promptAsync] = Google.useAuthRequest({
         clientId: '834489759004-29segmepkrv7a5e9baj0s60g1j0cc08t.apps.googleusercontent.com',
         language: Localization.locale,
-        // iosClientId: 'GOOGLE_GUID.apps.googleusercontent.com',
+        iosClientId: '834489759004-5jdo1hr2hu6i77ulmbq6bl2mchck4t9k.apps.googleusercontent.com',
         // androidClientId: 'GOOGLE_GUID.apps.googleusercontent.com',
     });
 
