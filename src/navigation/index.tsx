@@ -15,13 +15,18 @@ import { RootStackParamList } from '../types';
 import { useSecureAuthState } from '../utils/useSecureAuthState';
 import MainTabNavigator from './MainTabNavigator';
 import LinkingConfiguration from './LinkingConfiguration';
+import { createTokenResponseContextProvider } from '../utils/AuthSessionContext';
+
+export const [GoogleTokenResponse, useGoogleTokenResponse] = createTokenResponseContextProvider('Google')
 
 export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeName }) {
   return (
     <NavigationContainer
       linking={LinkingConfiguration}
       theme={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <AuthNavigator />
+      <GoogleTokenResponse>
+        <AuthNavigator />
+      </GoogleTokenResponse>
     </NavigationContainer>
   );
 }
@@ -32,11 +37,11 @@ const Stack = createStackNavigator<RootStackParamList>();
 
 function AuthNavigator() {
 
-  const [authState, setAuthState] = useSecureAuthState("auth.google");
+  const [authState] = useGoogleTokenResponse();
 
   const renderAuthScreen = React.useCallback(() => {
-    return (<AuthScreen setAuth={setAuthState} />)
-  }, [setAuthState])
+    return (<AuthScreen />)
+  }, [])
 
   if (authState.error) {
     return (

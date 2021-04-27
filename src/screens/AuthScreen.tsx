@@ -1,30 +1,23 @@
-import * as AuthSession from 'expo-auth-session';
 import * as Google from 'expo-auth-session/providers/google';
+import * as Localization from 'expo-localization';
 import * as React from 'react';
-import { Button, TouchableOpacity, } from 'react-native';
+
 import GoogleSignInButton from '../components/GoogleButton';
 import { Text, View } from '../components/Themed';
-import * as Localization from 'expo-localization'
-export default function Login({
-    setAuth,
-}: {
-    setAuth: (key: AuthSession.TokenResponse | null) => void;
-}) {
+import { useGoogleTokenResponse } from '../navigation';
 
+export default function Login() {
     return (
-        <View style={{ flex: 1, padding: 36, backgroundColor: 'white', justifyContent: "space-around", alignItems: 'center' }}>
+        <View style={{ flex: 1, padding: 36, justifyContent: "space-around", alignItems: 'center' }}>
             <Text style={{ textAlign: 'center', fontSize: 36, fontWeight: 'bold' }}>SWM Market App</Text>
-            <LoginButton
-                setAuth={setAuth}
-            />
+            <LoginButton />
         </View>
     );
 }
-function LoginButton({
-    setAuth,
-}: {
-    setAuth: (key: AuthSession.TokenResponse | null) => void;
-}) {
+
+function LoginButton() {
+    const [, setAuthState] = useGoogleTokenResponse();
+
     const [request, response, promptAsync] = Google.useAuthRequest({
         clientId: '834489759004-29segmepkrv7a5e9baj0s60g1j0cc08t.apps.googleusercontent.com',
         language: Localization.locale,
@@ -36,7 +29,7 @@ function LoginButton({
         if (response?.type === "success") {
             const { authentication } = response;
             if (authentication) {
-                setAuth(authentication);
+                setAuthState(authentication);
             }
         }
     }, [response]);

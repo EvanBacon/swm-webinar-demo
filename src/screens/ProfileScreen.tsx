@@ -3,13 +3,11 @@ import { Image, StyleSheet } from "react-native";
 
 import { Text, View } from "../components/Themed";
 import Colors from "../constants/Colors";
+import { useGoogleTokenResponse } from "../navigation";
 import { useGoogleUserProfile } from '../utils/API';
-import { useSecureAuthState } from "../utils/useSecureAuthState";
-
-
 
 export default function ProfileScreen() {
-  const [authState] = useSecureAuthState("auth.google");
+  const [authState] = useGoogleTokenResponse();
 
   const { value: data } = useGoogleUserProfile(authState.value?.accessToken)
 

@@ -6,7 +6,7 @@ import { Platform } from "react-native";
 
 import { useMounted, useSafeState, UseStateHook } from "./utils";
 
-async function setSecureItemAsync(
+export async function setSecureItemAsync(
   key: string,
   value: string | null
 ): Promise<string | null> {
@@ -31,7 +31,7 @@ const getItemAsync = Platform.select<(key: string) => Promise<string | null>>({
   web: AsyncStorage.getItem,
 });
 
-function useSecureState(key: string): UseStateHook<string> {
+export function useSecureState(key: string): UseStateHook<string> {
   // Public
   const [state, setState] = useSafeState<string>();
 

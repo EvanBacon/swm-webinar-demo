@@ -1,5 +1,8 @@
-import { useMounted, useSafeState } from "./utils";
+import * as AuthSession from "expo-auth-session";
+import { discovery } from "expo-auth-session/providers/google";
 import * as React from "react";
+
+import { useMounted, useSafeState } from "./utils";
 
 export interface Product {
   id: number;
@@ -284,10 +287,7 @@ export function useGoogleUserProfile(
     if (!accessToken) {
       return;
     }
-    fetch("https://www.googleapis.com/userinfo/v2/me", {
-      headers: { Authorization: `Bearer ${accessToken}` },
-    })
-      .then((data) => data.json())
+    AuthSession.fetchUserInfoAsync({ accessToken }, discovery)
       .then((value) => {
         if (isMounted.current) setState({ value });
       })
