@@ -242,10 +242,10 @@ export function useAPI(): { value: Product[] | null; error: Error | null } {
       .then((data) => data.json())
       .then((value) => {
         console.log(JSON.stringify(value));
-        if (isMounted.current) setState({ value });
+        if (isMounted) setState({ value });
       })
       .catch((error) => {
-        if (isMounted.current) setState({ error });
+        if (isMounted) setState({ error });
       });
   }, []);
 

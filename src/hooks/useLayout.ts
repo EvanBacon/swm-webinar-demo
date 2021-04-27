@@ -10,7 +10,7 @@ export function useLayout() {
   });
   const isMounted = useMounted();
   const onLayout = useCallback((e) => {
-    if (isMounted.current) {
+    if (isMounted) {
       setLayout(e.nativeEvent.layout);
     }
   }, []);
