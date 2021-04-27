@@ -1,38 +1,31 @@
 import React from 'react';
-import {
-    Image,
-    StyleProp,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    View,
-    ViewStyle,
-} from 'react-native';
+import { Image, StyleProp, StyleSheet, Text, TouchableOpacity, View, ViewStyle } from 'react-native';
+
+import { useSignIn } from '../utils/GoogleAuthSessionContext';
 
 const googleIcon = require('../../assets/images/google.png')
 
-export default class GoogleSignInButton extends React.PureComponent<{
-    disabled?: boolean;
-    style?: StyleProp<ViewStyle>;
-}> {
-    static defaultProps = {
-        onPress() { },
-    };
-    render() {
-        const { children, style, disabled, ...props } = this.props;
-        return (
-            <TouchableOpacity
-                disabled={disabled}
-                activeOpacity={0.6}
-                style={StyleSheet.flatten([styles.touchable, style])}
-                {...props}>
-                <View style={[styles.content, disabled && { opacity: 0.5 }]}>
-                    <Image source={googleIcon} style={styles.icon} />
-                    <Text style={styles.text}>{children}</Text>
-                </View>
-            </TouchableOpacity>
-        );
-    }
+export default function GoogleSignInButton({ children, style, ...props }: { children?: React.ReactNode, style?: StyleProp<ViewStyle> }) {
+
+    const signInAsync = useSignIn();
+    const disabled = !signInAsync;
+
+    return (
+        <TouchableOpacity
+            disabled={disabled}
+            activeOpacity={0.6}
+            style={StyleSheet.flatten([styles.touchable, style])}
+            onPress={() => {
+                signInAsync?.()
+            }}
+            {...props}>
+            <View style={[styles.content, disabled && { opacity: 0.5 }]}>
+                <Image source={googleIcon} style={styles.icon} />
+                <Text style={styles.text}>{children}</Text>
+            </View>
+        </TouchableOpacity>
+    );
+
 }
 
 const styles = StyleSheet.create({

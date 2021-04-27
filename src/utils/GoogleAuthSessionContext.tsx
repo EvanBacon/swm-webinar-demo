@@ -7,8 +7,8 @@ import {
 } from 'expo-auth-session/providers/google';
 import * as React from 'react';
 
-import { useGoogleUserProfile } from './API';
 import { createTokenResponseContextProvider } from './TokenResponseContext';
+import { useMounted, useSafeState } from './utils';
 
 const key = "AuthSession_Google";
 
@@ -127,7 +127,30 @@ export function useRefresh() {
     }, [setToken, token.value?.accessToken, config]);
 }
 
-export function useUserInfo() {
+export function useUserInfo<T extends Record<string, any>>() {
     const [auth] = useTokenResponse();
-    return useGoogleUserProfile(auth.value?.accessToken);
+    return useFetchUserInfo<T>(auth.value?.accessToken);
+}
+
+export function useFetchUserInfo<T extends Record<string, any>>(
+    accessToken?: string
+): { value: T | null; error: Error | null } {
+    const [state, setState] = useSafeState<T>();
+    const isMounted = useMounted();
+
+    React.useEffect(() => {
+        if (!accessToken) {
+            return;
+        }
+        AuthSession.fetchUserInfoAsync({ accessToken }, discovery)
+            .then((value) => {
+                // @ts-expect-error
+                if (isMounted) setState({ value });
+            })
+            .catch((error) => {
+                if (isMounted) setState({ error });
+            });
+    }, [accessToken]);
+
+    return state;
 }

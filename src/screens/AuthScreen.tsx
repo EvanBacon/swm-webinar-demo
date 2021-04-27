@@ -2,7 +2,6 @@ import * as React from 'react';
 
 import GoogleSignInButton from '../components/GoogleButton';
 import { Text, View } from '../components/Themed';
-import { useSignIn } from '../utils/GoogleAuthSessionContext';
 
 export default function Login() {
     return (
@@ -13,21 +12,7 @@ export default function Login() {
             alignItems: "center",
         }}>
             <Text style={{ textAlign: "center", fontSize: 36, fontWeight: "bold" }}>SWM Market App</Text>
-            <LoginButton />
+            <GoogleSignInButton>Sign-In with Google</GoogleSignInButton>
         </View>
-    );
-}
-
-function LoginButton() {
-    const signInAsync = useSignIn();
-    return (
-        <GoogleSignInButton
-            disabled={!signInAsync}
-            onPress={() => {
-                signInAsync?.();
-            }}
-        >
-            Sign-In with Google
-        </GoogleSignInButton>
     );
 }

@@ -3,10 +3,11 @@ import { Button, Image, StyleSheet } from 'react-native';
 
 import { Text, View } from '../components/Themed';
 import Colors from '../constants/Colors';
+import { ProfileData } from '../utils/API';
 import { useSignOut, useUserInfo } from '../utils/GoogleAuthSessionContext';
 
 export default function ProfileScreen() {
-  const { value: data } = useUserInfo();
+  const { value: data } = useUserInfo<ProfileData>();
   const signOutAsync = useSignOut()
 
   if (!data) {
