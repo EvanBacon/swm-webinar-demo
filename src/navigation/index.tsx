@@ -62,7 +62,7 @@ function AuthNavigator() {
   }
 
   return (
-    <Stack.Navigator screenOptions={{ headerShown: false }}>
+    <Stack.Navigator screenOptions={{ headerShown: false, animationEnabled: false }}>
       {!token.value && <Stack.Screen name="Auth" component={renderAuthScreen} />}
       {token.value && <Stack.Screen name="Root" component={MainTabNavigator} />}
       <Stack.Screen name="NotFound" component={NotFoundScreen} options={{ title: 'Oops!' }} />
