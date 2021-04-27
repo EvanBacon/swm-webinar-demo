@@ -1,5 +1,5 @@
-import * as React from 'react';
 import * as AuthSession from 'expo-auth-session';
+import * as React from 'react';
 
 import { useSecureAuthState } from './useSecureAuthState';
 import { UseStateHook } from './utils';

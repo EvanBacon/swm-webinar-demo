@@ -7,26 +7,31 @@ import { NavigationContainer, DefaultTheme, DarkTheme } from '@react-navigation/
 import { createStackNavigator } from '@react-navigation/stack';
 import * as React from 'react';
 import { View, Text, ColorSchemeName } from 'react-native';
+import * as Localization from 'expo-localization';
 
 import AuthScreen from '../screens/AuthScreen';
 
 import NotFoundScreen from '../screens/NotFoundScreen';
 import { RootStackParamList } from '../types';
-import { useSecureAuthState } from '../utils/useSecureAuthState';
 import MainTabNavigator from './MainTabNavigator';
 import LinkingConfiguration from './LinkingConfiguration';
-import { createTokenResponseContextProvider } from '../utils/AuthSessionContext';
+import { GoogleAuthSessionProvider, useTokenResponse } from '../utils/GoogleAuthSessionContext';
 
-export const [GoogleTokenResponse, useGoogleTokenResponse] = createTokenResponseContextProvider('Google')
+const config = {
+  clientId: '834489759004-29segmepkrv7a5e9baj0s60g1j0cc08t.apps.googleusercontent.com',
+  language: Localization.locale,
+  iosClientId: '834489759004-5jdo1hr2hu6i77ulmbq6bl2mchck4t9k.apps.googleusercontent.com',
+  // androidClientId: 'GOOGLE_GUID.apps.googleusercontent.com',
+}
 
 export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeName }) {
   return (
     <NavigationContainer
       linking={LinkingConfiguration}
       theme={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <GoogleTokenResponse>
+      <GoogleAuthSessionProvider config={config}>
         <AuthNavigator />
-      </GoogleTokenResponse>
+      </GoogleAuthSessionProvider>
     </NavigationContainer>
   );
 }
@@ -37,24 +42,24 @@ const Stack = createStackNavigator<RootStackParamList>();
 
 function AuthNavigator() {
 
-  const [authState] = useGoogleTokenResponse();
+  const [token] = useTokenResponse();
 
   const renderAuthScreen = React.useCallback(() => {
     return (<AuthScreen />)
   }, [])
 
-  if (authState.error) {
+  if (token.error) {
     return (
       <View style={{ flex: 1, justifyContent: "center" }}>
-        <Text>Error getting cached auth: {authState.error.message}</Text>
+        <Text>Error getting cached auth: {token.error.message}</Text>
       </View>
     );
   }
 
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
-      {!authState.value && <Stack.Screen name="Auth" component={renderAuthScreen} />}
-      {authState.value && <Stack.Screen name="Root" component={MainTabNavigator} />}
+      {!token.value && <Stack.Screen name="Auth" component={renderAuthScreen} />}
+      {token.value && <Stack.Screen name="Root" component={MainTabNavigator} />}
       <Stack.Screen name="NotFound" component={NotFoundScreen} options={{ title: 'Oops!' }} />
     </Stack.Navigator>
   );

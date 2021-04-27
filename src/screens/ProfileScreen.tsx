@@ -1,15 +1,13 @@
-import * as React from "react";
-import { Image, StyleSheet } from "react-native";
+import * as React from 'react';
+import { Button, Image, StyleSheet } from 'react-native';
 
-import { Text, View } from "../components/Themed";
-import Colors from "../constants/Colors";
-import { useGoogleTokenResponse } from "../navigation";
-import { useGoogleUserProfile } from '../utils/API';
+import { Text, View } from '../components/Themed';
+import Colors from '../constants/Colors';
+import { useSignOut, useUserInfo } from '../utils/GoogleAuthSessionContext';
 
 export default function ProfileScreen() {
-  const [authState] = useGoogleTokenResponse();
-
-  const { value: data } = useGoogleUserProfile(authState.value?.accessToken)
+  const { value: data } = useUserInfo();
+  const signOutAsync = useSignOut()
 
   if (!data) {
     return null;
@@ -26,6 +24,7 @@ export default function ProfileScreen() {
         </View>
 
       </View>
+      <Button title="Sign Out" onPress={signOutAsync} />
     </View>
   );
 }
