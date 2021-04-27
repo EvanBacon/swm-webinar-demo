@@ -2,23 +2,29 @@ import * as React from "react";
 import { Image } from "react-native";
 
 export type UseStateHook<T> = [
-  { value: T | null; error: Error | null },
+  { value: T | null; isLoading: boolean; error: Error | null },
   (value: T | null) => void
 ];
 
 export function useSafeState<T>(initialValue?: {
   value: T | null;
+  isLoading: boolean;
   error: Error | null;
 }) {
   return React.useReducer(
     (
-      state: { value: T | null; error: Error | null },
-      action: Partial<{ value: T | null; error: Error | null }>
+      state: { value: T | null; isLoading: boolean; error: Error | null },
+      action: Partial<{
+        value: T | null;
+        isLoading: boolean;
+        error: Error | null;
+      }>
     ) => ({
+      isLoading: action.isLoading ?? false,
       error: action.error === undefined ? null : action.error,
       value: action.value === undefined ? null : action.value,
     }),
-    initialValue ?? { value: null, error: null }
+    initialValue ?? { value: null, isLoading: true, error: null }
   );
 }
 

@@ -48,6 +48,10 @@ function AuthNavigator() {
     return (<AuthScreen />)
   }, [])
 
+  // Prevent jumpy state
+  if (token.isLoading) {
+    return null;
+  }
 
   if (token.error) {
     return (

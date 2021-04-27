@@ -19,7 +19,6 @@ export function useSecureAuthState(
         setState({ value: parsed });
       } catch {
         setState({
-          value: null,
           error: new Error(
             `Failed to parse cached auth state: ${authState.value}`
           ),
@@ -28,7 +27,7 @@ export function useSecureAuthState(
     } else if (authState.error) {
       setState({ error: authState.error });
     } else {
-      setState({});
+      setState({ isLoading: authState.isLoading });
     }
   }, [authState]);
 
