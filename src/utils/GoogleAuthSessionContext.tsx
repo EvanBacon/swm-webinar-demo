@@ -18,17 +18,15 @@ const [
 ] = createTokenResponseContextProvider(key);
 
 const GoogleAuthSessionContext = React.createContext<{
-    config: Partial<GoogleAuthRequestConfig>;
-    prompt: [
+    useRequest: () => [
         AuthSession.AuthRequest | null,
         AuthSession.AuthSessionResult | null,
-        (
-            options?: AuthSession.AuthRequestPromptOptions
-        ) => Promise<AuthSession.AuthSessionResult>
-    ];
+        (options?: AuthSession.AuthRequestPromptOptions | undefined) => Promise<AuthSession.AuthSessionResult>
+    ],
+    config: Partial<GoogleAuthRequestConfig>;
 } | null>(null);
 
-GoogleAuthSessionContext.displayName = `TokenResponseContext_${key}`;
+GoogleAuthSessionContext.displayName = `GoogleAuthSessionContext`;
 
 export function GoogleAuthSessionProvider({
     children,
@@ -41,12 +39,14 @@ export function GoogleAuthSessionProvider({
     isIdToken?: boolean;
     redirectUriOptions?: Partial<AuthSession.AuthSessionRedirectUriOptions>;
 }) {
-    const useRequest = React.useMemo(() => isIdToken ? useIdTokenAuthRequest : useAuthRequest, [isIdToken]);
-    const prompt = useRequest(config, redirectUriOptions);
+    const useRequest = React.useCallback(() => {
+        const useRequest = isIdToken ? useIdTokenAuthRequest : useAuthRequest;
+        return useRequest(config, redirectUriOptions);
+    }, [isIdToken, config, redirectUriOptions]);
 
     return (
         <TokenResponseContext>
-            <GoogleAuthSessionContext.Provider value={{ config, prompt }}>
+            <GoogleAuthSessionContext.Provider value={{ useRequest, config }}>
                 {children}
             </GoogleAuthSessionContext.Provider>
         </TokenResponseContext>
@@ -67,13 +67,12 @@ function useAuthSessionContext() {
 
 export function useAuthSession() {
     const auth = useAuthSessionContext();
-    return auth.prompt;
+    return auth.useRequest();
 }
 
 export function useSignIn() {
-    const auth = useAuthSessionContext();
     const [, setToken] = useTokenResponse();
-    const [request, response, promptAsync] = auth.prompt;
+    const [request, response, promptAsync] = useAuthSession();
 
     React.useEffect(() => {
         if (response?.type === "success") {
@@ -88,40 +87,36 @@ export function useSignIn() {
 }
 
 export function useSignOut() {
-    const auth = useAuthSessionContext();
-
-    const [, setToken] = useTokenResponse();
-
-    const [token] = useTokenResponse();
-
-    return React.useCallback(async () => {
-        if (!token.value?.accessToken) {
-            return null;
-        }
-        const success = await AuthSession.revokeAsync(
-            { ...auth.config, token: token.value!.accessToken },
-            discovery
-        );
-        if (success) {
-            setToken(null);
-        }
-        return success;
-    }, [token.value?.accessToken, setToken]);
-}
-
-export function useRefresh() {
-    const auth = useAuthSessionContext();
+    const { config } = useAuthSessionContext();
     const [token, setToken] = useTokenResponse();
 
     return React.useCallback(async () => {
         if (!token.value?.accessToken) {
             return null;
         }
+        const success = await AuthSession.revokeAsync(
+            { ...config, token: token.value!.accessToken },
+            discovery
+        );
+        if (success) {
+            setToken(null);
+        }
+        return success;
+    }, [setToken, token.value?.accessToken, config]);
+}
 
+export function useRefresh() {
+    const { config } = useAuthSessionContext();
+    const [token, setToken] = useTokenResponse();
+
+    return React.useCallback(async () => {
+        if (!token.value?.accessToken) {
+            return null;
+        }
         const refreshed = await token.value.refreshAsync(
             {
-                ...auth.config,
-                clientId: auth.config.clientId!,
+                ...config,
+                clientId: config.clientId!,
             },
             discovery
         );
@@ -129,15 +124,10 @@ export function useRefresh() {
         setToken(refreshed);
 
         return refreshed;
-    }, [setToken, token.value?.accessToken, auth.config]);
+    }, [setToken, token.value?.accessToken, config]);
 }
 
 export function useUserInfo() {
     const [auth] = useTokenResponse();
-    if (auth == null) {
-        throw new Error(
-            `No auth value available. Make sure you are rendering \`<GoogleAuthSessionProvider>\` at the top of your app.`
-        );
-    }
     return useGoogleUserProfile(auth.value?.accessToken);
 }

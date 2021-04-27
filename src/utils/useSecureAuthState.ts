@@ -1,75 +1,13 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as AuthSession from "expo-auth-session";
-import * as SecureStore from "expo-secure-store";
 import * as React from "react";
-import { Platform } from "react-native";
 
-import { useMounted, useSafeState, UseStateHook } from "./utils";
-
-export async function setSecureItemAsync(
-  key: string,
-  value: string | null
-): Promise<string | null> {
-  if (value == null) {
-    if (Platform.OS === "web") {
-      await AsyncStorage.removeItem(key);
-    } else {
-      await SecureStore.deleteItemAsync(key);
-    }
-  } else {
-    if (Platform.OS === "web") {
-      await AsyncStorage.setItem(key, value);
-    } else {
-      await SecureStore.setItemAsync(key, value);
-    }
-  }
-  return value;
-}
-
-const getItemAsync = Platform.select<(key: string) => Promise<string | null>>({
-  default: SecureStore.getItemAsync,
-  web: AsyncStorage.getItem,
-});
-
-export function useSecureState(key: string): UseStateHook<string> {
-  // Public
-  const [state, setState] = useSafeState<string>();
-
-  // Sanity
-  const isMounted = useMounted();
-
-  // Get
-  React.useEffect(() => {
-    getItemAsync(key)
-      .then((value) => {
-        if (isMounted.current) setState({ value });
-      })
-      .catch((error) => {
-        if (isMounted.current) setState({ error });
-      });
-  }, [key]);
-
-  // Set
-  const setValue = React.useCallback(
-    (value: string | null) => {
-      setSecureItemAsync(key, value)
-        .then((value) => {
-          if (isMounted.current) setState({ value });
-        })
-        .catch((error) => {
-          if (isMounted.current) setState({ error });
-        });
-    },
-    [key]
-  );
-
-  return [state, setValue];
-}
+import { useStorageState } from "./useStorageState";
+import { useSafeState, UseStateHook } from "./utils";
 
 export function useSecureAuthState(
   key: string
 ): UseStateHook<AuthSession.TokenResponse> {
-  const [authState, setAuthState] = useSecureState(key);
+  const [authState, setAuthState] = useStorageState(key);
   const [state, setState] = useSafeState<AuthSession.TokenResponse>();
 
   React.useEffect(() => {

@@ -266,20 +266,20 @@ export type ProfileData = {
 export function useGoogleUserProfile(
   accessToken?: string
 ): { value: ProfileData | null; error: Error | null } {
-  if (__DEV__) {
-    const data = {
-      email: "baconbrix@gmail.com",
-      family_name: "Bacon",
-      given_name: "Evan",
-      id: "102174862475502383175",
-      locale: "en",
-      name: "Evan Bacon",
-      picture:
-        "https://lh3.googleusercontent.com/a-/AOh14GjYlRkC6r5gKuxYkC0M1xepxlPWDDY8QF1Kz_GSRrs=s96-c",
-      verified_email: true,
-    };
-    return { value: data, error: null };
-  }
+  // if (__DEV__) {
+  //   const data = {
+  //     email: "baconbrix@gmail.com",
+  //     family_name: "Bacon",
+  //     given_name: "Evan",
+  //     id: "102174862475502383175",
+  //     locale: "en",
+  //     name: "Evan Bacon",
+  //     picture:
+  //       "https://lh3.googleusercontent.com/a-/AOh14GjYlRkC6r5gKuxYkC0M1xepxlPWDDY8QF1Kz_GSRrs=s96-c",
+  //     verified_email: true,
+  //   };
+  //   return { value: data, error: null };
+  // }
   const [state, setState] = useSafeState<ProfileData>();
   const isMounted = useMounted();
 
@@ -289,10 +289,10 @@ export function useGoogleUserProfile(
     }
     AuthSession.fetchUserInfoAsync({ accessToken }, discovery)
       .then((value) => {
-        if (isMounted.current) setState({ value });
+        if (isMounted) setState({ value });
       })
       .catch((error) => {
-        if (isMounted.current) setState({ error });
+        if (isMounted) setState({ error });
       });
   }, [accessToken]);
 

@@ -22,33 +22,8 @@ export function useSafeState<T>(initialValue?: {
   );
 }
 
-export function useResolvedValue<T>(
-  method: () => Promise<T>
-): { value: T | null; error: Error | null } {
-  const [state, setState] = useSafeState<T>();
-  const isMounted = useMounted();
-
-  React.useEffect(() => {
-    setState({});
-
-    method()
-      .then((value) => {
-        if (isMounted.current) {
-          setState({ value });
-        }
-      })
-      .catch((error) => {
-        if (isMounted.current) {
-          setState({ error });
-        }
-      });
-  }, [method]);
-
-  return state;
-}
-
 export function useMounted() {
-  return React.useRef(true);
+  return React.useRef(true).current;
 }
 
 export function useImageSize(uri: string) {
@@ -63,11 +38,10 @@ export function useImageSize(uri: string) {
     Image.getSize(
       uri,
       (width, height) => {
-        if (isMounted.current)
-          setState({ value: { width, height }, error: null });
+        if (isMounted) setState({ value: { width, height }, error: null });
       },
       (error) => {
-        if (isMounted.current) setState({ value: null, error });
+        if (isMounted) setState({ value: null, error });
       }
     );
   }, [uri]);

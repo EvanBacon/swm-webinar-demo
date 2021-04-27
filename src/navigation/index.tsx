@@ -48,6 +48,7 @@ function AuthNavigator() {
     return (<AuthScreen />)
   }, [])
 
+
   if (token.error) {
     return (
       <View style={{ flex: 1, justifyContent: "center" }}>

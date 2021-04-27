@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { useSecureState } from './useSecureAuthState';
+import { useStorageState } from './useStorageState';
 import { UseStateHook } from './utils';
 
 export function createStorageContextProvider(key: string): [
@@ -18,7 +18,7 @@ export function createStorageContextProvider(key: string): [
     }: {
         children?: React.ReactNode;
     }) {
-        const value = useSecureState(key)
+        const value = useStorageState(key)
         return (<StorageContext.Provider value={value}>{children}</StorageContext.Provider>);
     }
     function useStorage(): UseStateHook<string> {
